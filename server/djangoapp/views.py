@@ -14,7 +14,7 @@ import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
 from .populate import initiate
-
+from .restapis import get_request
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -90,7 +90,6 @@ def logout_request(request):
     return JsonResponse(data)
 
 
-    from .populate import initiate
 from .models import CarMake, CarModel
 
 
@@ -103,3 +102,14 @@ def get_cars(request):
     for car_model in car_models:
         cars.append({"CarModel": car_model.name, "CarMake": car_model.car_make.name})
     return JsonResponse({"CarModels": cars})
+
+ 
+
+
+def get_dealerships(request, state="All"):
+    if state == "All":
+        endpoint = "/fetchDealers"
+    else:
+        endpoint = "/fetchDealers/" + state
+    dealerships = get_request(endpoint)
+    return JsonResponse({"status": 200, "dealers": dealerships})
